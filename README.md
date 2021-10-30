@@ -1,3 +1,4 @@
+# apexducks-candy-machine-wl-site
 
 Fork of [CryptoOutcasts/Candy_Machine_Whitelist_Site](https://github.com/CryptoOutcasts/Candy_Machine_Whitelist_Site) for [ApexDucks](https://apexducks.io) NFT Halloween Collection
 
