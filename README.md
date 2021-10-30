@@ -22,7 +22,7 @@ Visit https://github.com/CryptoOutcasts/Whitelist_API and follow the steps to ge
 
 1. Fork the project, then clone down. Example:
 ```
-git clone https://github.com/CryptoOutcasts/Candy_Machine_Whitelist_Site.git
+git clone https://github.com/itsAPK/apexducks-candy-machine-wl-site
 ```
 2. Install dependencies
 ```
