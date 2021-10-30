@@ -45,7 +45,11 @@ const txTimeout = 30000; // milliseconds (confirm this works for your project)
 
 const theme = createTheme({
     palette: {
-        type: 'dark',
+        
+        action: {
+          disabled : '#111111'
+              
+        }
     },
     overrides: {
         MuiButtonBase: {
@@ -65,6 +69,7 @@ const theme = createTheme({
                 marginLeft: 8,
             },
         },
+       
     },
 });
 

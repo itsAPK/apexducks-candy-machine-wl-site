@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import Countdown from "react-countdown";
-import { Button, CircularProgress, Snackbar } from "@material-ui/core";
+import { Button, CircularProgress, Snackbar,withStyles,Typography} from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
+
+
 
 import * as anchor from "@project-serum/anchor";
 
@@ -16,16 +18,99 @@ import {
   awaitTransactionSignatureConfirmation,
   getCandyMachineState,
   mintOneToken,
+  // eslint-disable-next-line
   shortenAddress,
 } from "./candy-machine";
 
-const ConnectButton = styled(WalletDialogButton)``;
+import logo from './logo.png';
+import svglogo from './navlogo.png';
 
-const CounterText = styled.span``; // add your styles here
 
-const MintContainer = styled.div``; // add your styles here
 
-const MintButton = styled(Button)``; // add your styles here
+const ConnectButton = withStyles({
+  root: {
+    background: '#000000',
+    borderRadius: 5,
+    border: 2,
+    color: '#ffbedf',
+    height: 48,
+    fontSize : '15px',
+    overflow :'hidden',
+    fontWeight : 1000,
+    padding: '0 30px',
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+  },
+  label: {
+    textTransform: 'capitalize',
+  },
+})(WalletDialogButton);
+
+const NavBar=styled.nav`
+height: 85px;
+display: flex;
+justify-content: space-between;
+z-index: 12;
+padding:  30px;
+font-weight :  1000;
+font-size : 50px;
+
+@media screen and (max-width: 768px) {
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding:  30px;
+font-weight :  1000;
+font-size : 30px;
+}`
+
+const CounterText = styled.span`
+overflow : hidden;
+`; // add your styles here
+
+const MintContainer = styled.div`
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+padding:  50px;
+font-weight :  1000;
+font-size : 30px;
+`; // add your styles here
+
+const MintButton = withStyles({
+  root: {
+    background: 'black',
+    borderRadius: 5,
+    border: 0,
+    color: '#ffbedf;',
+    height: 70,
+    width : 300,
+    fontSize : '18px',
+    overflow :'hidden',
+    fontWeight : 1000,
+    padding: '0 30px',
+    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+  },
+  label: {
+    textTransform: 'capitalize',
+  },
+})(Button); // add your styles here
+
+
+//eslint-disable-next-line
+const SecondryDiv=styled.div`
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+font-weight :  1000;
+font-size : 30px;
+
+`
+// add your styles here
+
+
 
 export interface HomeProps {
   candyMachineId: anchor.web3.PublicKey;
@@ -37,7 +122,9 @@ export interface HomeProps {
 }
 
 const Home = (props: HomeProps) => {
+  // eslint-disable-next-line
   const [api_url, setUrl] = useState(process.env.REACT_APP_API_URL)
+  // eslint-disable-next-line
   const [balance, setBalance] = useState<number>();
   const [isActive, setIsActive] = useState(false); // true when countdown completes
   const [isSoldOut, setIsSoldOut] = useState(false); // true when items remaining is zero
@@ -46,6 +133,7 @@ const Home = (props: HomeProps) => {
 
   const [itemsAvailable, setItemsAvailable] = useState(0);
   const [itemsRedeemed, setItemsRedeemed] = useState(0);
+  // eslint-disable-next-line
   const [itemsRemaining, setItemsRemaining] = useState(0);
 
   const [alertState, setAlertState] = useState<AlertState>({
@@ -87,7 +175,8 @@ const Home = (props: HomeProps) => {
 
   const onMint = async () => {
     try {
-      let res = await fetch(`${api_url}/whitelisted/member/${(wallet as anchor.Wallet).publicKey.toString()}`, {method: "GET"})
+      let res = await fetch(`http://localhost:5000/whitelisted/member/${(wallet as anchor.Wallet).publicKey.toString()}`, {method: "GET"})
+      
       const res_json = await res.json()
       const res_num = await JSON.parse(JSON.stringify(res_json)).reserve //The number  of reserves the user has left
       if(!isWhitelisted){
@@ -95,7 +184,7 @@ const Home = (props: HomeProps) => {
       }
       if(res_num - 1 < 0){
         console.log("confirmed")
-        throw new Error("Not enough reserves");
+        throw new Error("Limit Reached");
       }
       setIsMinting(true);
       if (wallet && candyMachine?.program) {
@@ -121,7 +210,7 @@ const Home = (props: HomeProps) => {
             severity: "success",
           });
           const to_send = await JSON.stringify({"reserve": res_num-1})
-          await fetch(`${api_url}/whitelisted/update/${(wallet as anchor.Wallet).publicKey.toString()}/${process.env.REACT_APP_SECRET_KEY}`, {
+          await fetch(`http://localhost:5000/whitelisted/update/${(wallet as anchor.Wallet).publicKey.toString()}/${process.env.REACT_APP_SECRET_KEY}`, {
             method: "PUT",
             headers: {
             'Content-Type': 'application/json',
@@ -155,7 +244,7 @@ const Home = (props: HomeProps) => {
           message = `Minting period hasn't started yet.`;
         } else if (error.message === "You are not whitelisted"){
           message = error.message;
-        } else if (error.message === "Not enough reserves"){
+        } else if (error.message === "Your minting limit reached"){
           message = error.message
         }
       }
@@ -180,7 +269,7 @@ const Home = (props: HomeProps) => {
       if (wallet) {
         const balance = await props.connection.getBalance(wallet.publicKey);
         setBalance(balance / LAMPORTS_PER_SOL);
-        const data = await fetch(`${api_url}/whitelisted/member/${(wallet as anchor.Wallet).publicKey.toString()}`)
+        const data = await fetch(`http://localhost:5000/whitelisted/member/${(wallet as anchor.Wallet).publicKey.toString()}`)
         if(data.status.toString() !== "404"){
           SetWhitelisted(true)
         }
@@ -199,34 +288,36 @@ const Home = (props: HomeProps) => {
 
   return (
     <main>
-      {wallet && (
-        <p>Wallet {shortenAddress(wallet.publicKey.toBase58() || "")}</p>
-      )}
-
-      {wallet && <p>Balance: {(balance || 0).toLocaleString()} SOL</p>}
-
-      {wallet && <p>Total Available: {itemsAvailable}</p>}
-
-      {wallet && <p>Redeemed: {itemsRedeemed}</p>}
-
-      {wallet && <p>Remaining: {itemsRemaining}</p>}
-
+      <NavBar>
+      <img src={svglogo} alt='apexducks logo' style={{width :"400px", height:"60px"}}/>
+      
+      
+      </NavBar>
+      <SecondryDiv> <img src={logo} alt='apexducks logo' /></SecondryDiv>
+     
       <MintContainer>
-        {!wallet ? (
-          <ConnectButton>Connect Wallet</ConnectButton>
-        ) : (
-          <MintButton
+          {!wallet ?(<ConnectButton>Connect Wallet</ConnectButton>)
+          :(<MintButton
+      
+            color="primary"
             disabled={!isWhitelisted || isSoldOut || isMinting || !isActive} //change happened here
             onClick={onMint}
             variant="contained"
+            style= {{ display : 'inline-block'}}
+            
           >
             {isSoldOut ? (
               "SOLD OUT"
-            ) : isActive ? (
+            ) : (!isWhitelisted ? ("You're not Whitelisted")
+            : (isActive ? (
               isMinting ? (
                 <CircularProgress />
               ) : (
-                "MINT"
+                <div>
+                <Typography variant="h4" display="block" style={{fontFamily : 'Segoe UI', fontWeight : 1000, marginBottom: '5px'}}>MINT </Typography>
+                
+                <Typography variant="subtitle1" display="block"  style={{fontFamily : 'Segoe UI', fontWeight : 1000, marginBottom: '5px'}}>{itemsRedeemed} / {itemsAvailable} NFT Minted</Typography>
+              </div>
               )
             ) : (
               <Countdown
@@ -235,10 +326,12 @@ const Home = (props: HomeProps) => {
                 onComplete={() => setIsActive(true)}
                 renderer={renderCounter}
               />
-            )}
+            )))}
+
           </MintButton>
-        )}
+          )}
       </MintContainer>
+     
 
       <Snackbar
         open={alertState.open}
@@ -265,7 +358,7 @@ interface AlertState {
 const renderCounter = ({ days, hours, minutes, seconds, completed }: any) => {
   return (
     <CounterText>
-      {hours + (days || 0) * 24} hours, {minutes} minutes, {seconds} seconds
+      MINTING STARTS IN <br/>{hours + (days || 0) * 24} : {minutes} : {seconds}
     </CounterText>
   );
 };

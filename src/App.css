@@ -1,5 +1,29 @@
-*{
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
+.App {
+  overflow-x: hidden !important;
 }
+
+html {
+  overflow-x: hidden !important;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: #FCD3D1;
+  background-image: url("./background.jpg");
+  background-size: cover;
+  color: rgb(12, 12, 12);
+  overflow-x: hidden !important;
+  
+}
+
+img {
+  height: 320px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
