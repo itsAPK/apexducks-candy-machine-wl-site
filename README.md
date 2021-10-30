@@ -1,8 +1,11 @@
-# Candy-Machine-Mint
 
-This repo is built on top the Exiled apes Candy_Machine_Mint_Site example with added whitelist functionality
+Fork of [CryptoOutcasts/Candy_Machine_Whitelist_Site](https://github.com/CryptoOutcasts/Candy_Machine_Whitelist_Site) for [ApexDucks](https://apexducks.io) NFT Halloween Collection
+
+
 ## BEFORE YOU START
- # Visit https://github.com/CryptoOutcasts/Whitelist_API and follow the steps to get your whitelist API setup and then continue here.
+
+Visit https://github.com/CryptoOutcasts/Whitelist_API and follow the steps to get your whitelist API setup and then continue here.
+
 ## Getting Set Up
 
 ### Prerequisites
